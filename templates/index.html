@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Picture Background Remover</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 40px; }
+    .container { max-width: 600px; margin: auto; }
+    input[type="file"] { margin: 20px 0; }
+    img { max-width: 100%; margin-top: 20px; border: 1px solid #ddd; }
+    button { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ Background Remover</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" required>
+      <button type="submit">Remove Background</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch('/process', { method: 'POST', body: formData });
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      document.getElementById('result').innerHTML = `
+        <h3>Result:</h3>
+        <img src="${url}" alt="Processed Image">
+        <a href="${url}" download="output.png"><button>Download</button></a>
+      `;
+    });
+  </script>
+</body>
+</html>
